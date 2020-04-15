@@ -1,22 +1,39 @@
+<?php
+//login logic
+    session_start();
+    include('assets/_config/config.php'); //loads the connection file
+
+    //signin
+    if(isset($_POST['Admin_login']))
+    {
+        $Staff_NO = $_POST['Staff_NO'];
+        $password = (($_POST['password']));//double encrypt to increase security
+        $stmt=$mysqli->prepare("SELECT Staff_NO, password, Admin_ID  FROM Admin  WHERE Staff_NO=? AND password=?");//sql to log in user
+        $stmt->bind_param('ss',$Staff_NO, $password);//bind fetched parameters
+        $stmt->execute();//execute bind
+        $stmt -> bind_result($Staff_NO, $password, $Admin_ID);//bind result
+        $rs=$stmt->fetch();
+        $_SESSION['Admin_ID'] = $Admin_ID;//assaign session to Admin id
+        
+        if($rs)
+            {
+                //if its sucessfull
+                header("location:dashboard.php");
+            }
+
+        else
+            {
+                $err = "Access Denied Please Check Your Credentials";
+            }
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
     
-<head>
-        <meta charset="utf-8" />
-        <title>Unisys - Fully integrated for ease of use and interaction</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
-        <meta content="Coderthemes" name="author" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <!-- App favicon -->
-        <link rel="shortcut icon" href="assets/images/favicon.ico">
-
-        <!-- App css -->
-        <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-        <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" />
-
-    </head>
+    <?php
+        //include head partial
+        include("assets/_partials/_head.php");
+    ?>
 
     <body class="authentication-bg authentication-bg-pattern">
 
@@ -29,8 +46,8 @@
                             <div class="card-body p-4">
                                 
                                 <div class="text-center w-75 m-auto">
-                                    <a href="index.html">
-                                        <span><img src="assets/images/logo-dark.png" alt="" height="22"></span>
+                                    <a href="index.php">
+                                        <span><img src="assets/images/scottlogo.png" alt="" height="75"></span>
                                     </a>
                                     <p class="text-muted mb-4 mt-3">Enter your ID and password to access admin panel.</p>
                                 </div>
@@ -38,7 +55,7 @@
                                 <form method = "POST">
 
                                     <div class="form-group mb-3">
-                                        <label for="emailaddress">Email address</label>
+                                        <label for="emailaddress">Staff ID</label>
                                         <input class="form-control" type="text" id="emailaddress" required name="Staff_NO" placeholder="Enter your staff ID">
                                     </div>
 
@@ -55,7 +72,7 @@
                                     </div>
 
                                     <div class="form-group mb-0 text-center">
-                                        <button class="btn btn-primary btn-block" name= "Admin_login"type="submit"> Log In </button>
+                                        <button class="btn btn-outline-success btn-block" name= "Admin_login"type="submit"> Log In </button>
                                     </div>
 
                                 </form>
@@ -99,11 +116,11 @@
             <!-- end container -->
         </div>
         <!-- end page -->
-
-
-        <footer class="footer footer-alt">
-            2020 - <?php echo date ('Y');?> &copy; Unisys theme Powered by <a href="#" class="text-white-50">Mwececi</a> 
-        </footer>
+        <!--end of page -->
+        <?php
+        //include footer partial
+        include("assets/_partials/_footer.php");
+        ?>
 
         <!-- Vendor js -->
         <script src="assets/js/vendor.min.js"></script>
