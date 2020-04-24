@@ -1,3 +1,10 @@
+<?php
+session_start();
+ include('assets/_config/config.php');
+ include('assets/_config/checklogin.php');
+ check_login();
+ ?>
+
 <!DOCTYPE html>
 <html lang="en">
     
